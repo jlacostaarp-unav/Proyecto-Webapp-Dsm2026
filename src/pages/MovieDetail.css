@@ -45,11 +45,14 @@
 }
 
 .movie-detail-wrapper h3, 
-.movie-detail-wrapper h5 {
-  color: white;
+.movie-detail-wrapper h5,
+.movie-detail-wrapper p,
+.movie-detail-wrapper li {
+  color: white !important;
 }
 
-.movie-detail-wrapper .text-secondary {
+.movie-detail-wrapper .text-secondary,
+.movie-detail-wrapper .text-secondary strong {
   color: #b3b3b3 !important;
 }
 
