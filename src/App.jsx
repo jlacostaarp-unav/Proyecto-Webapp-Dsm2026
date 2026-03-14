@@ -6,6 +6,7 @@ import Footer from './components/ui/Footer';
 import Home from './pages/Home';
 import Contact from './pages/Contact';
 import LegalNotice from './pages/LegalNotice';
+import MovieDetail from './pages/MovieDetail';
 import ErrorPage from './pages/ErrorPage';
 import AuthContext from './store/AuthContext';
 
@@ -89,6 +90,7 @@ function App() {
           <Route path="/" element={<Home peliculas={peliculas} />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/legal" element={<LegalNotice />} />
+          <Route path="/movie/:id" element={<MovieDetail peliculas={peliculas} />} />
           
           {/* Placeholders para futuras implementaciones */}
           <Route path="/favorites" element={<div className="container mt-4"><h2>Mis Favoritos</h2><p>Próximamente...</p></div>} />

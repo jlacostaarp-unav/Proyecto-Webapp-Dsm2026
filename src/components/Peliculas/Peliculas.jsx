@@ -9,6 +9,7 @@ function Peliculas({ peliculas }) {
         {peliculas.map((p) => (
           <Col key={p.id}>
             <Pelicula 
+              id={p.id}
               titulo={p.titulo}
               imagen={p.imagen}
               descripcion={p.descripcion}
