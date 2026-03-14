@@ -1,0 +1,23 @@
+import React from 'react';
+import { Card, Button, Badge } from 'react-bootstrap';
+
+function Pelicula({ titulo, imagen, descripcion, categoria, nota }) {
+  return (
+    <Card className="h-100 shadow-sm">
+      <Card.Img variant="top" src={imagen} alt={titulo} style={{ height: '450px', objectFit: 'cover' }} />
+      <Card.Body className="d-flex flex-column">
+        <div className="d-flex justify-content-between align-items-start mb-2">
+          <Card.Title className="mb-0">{titulo}</Card.Title>
+          <Badge bg="warning" text="dark">⭐ -</Badge>
+        </div>
+        <Badge bg="info" className="mb-3 w-fit-content" style={{ alignSelf: 'start' }}>{categoria}</Badge>
+        <Card.Text className="text-muted small">
+          {descripcion.length > 150 ? descripcion.substring(0, 150) + "..." : descripcion}
+        </Card.Text>
+        <Button variant="primary" className="mt-auto">Ver detalles</Button>
+      </Card.Body>
+    </Card>
+  );
+}
+
+export default Pelicula;
