@@ -23,7 +23,7 @@ function Header() {
             ) : (
               <>
                 <Nav.Link as={NavLink} to="/login">Login</Nav.Link>
-                <Nav.Link as={NavLink} to="/register">Registro</Nav.Link>
+                <Nav.Link as={Link} to="/register" className="mx-2 border border-primary rounded-pill px-3">Registro</Nav.Link>
               </>
             )}
           </Nav>

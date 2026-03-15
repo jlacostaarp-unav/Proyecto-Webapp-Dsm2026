@@ -9,6 +9,7 @@ import LegalNotice from './pages/LegalNotice';
 import MovieDetail from './pages/MovieDetail';
 import ErrorPage from './pages/ErrorPage';
 import AuthContext from './store/AuthContext';
+import Register from './pages/Register';
 
 const PELICULAS_MOCK = [
   {
@@ -90,6 +91,7 @@ function App() {
           <Route path="/" element={<Home peliculas={peliculas} />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/legal" element={<LegalNotice />} />
+          <Route path="/register" element={<Register />} />
           <Route path="/movie/:id" element={<MovieDetail peliculas={peliculas} />} />
           
           {/* Placeholders para futuras implementaciones */}
