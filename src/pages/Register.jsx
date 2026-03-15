@@ -23,7 +23,7 @@ function Register() {
     e.preventDefault();
     setError('');
 
-    // Validaciones
+    // Validaciones básicas
     if (formData.password !== formData.confirmPassword) {
       return setError('Las contraseñas no coinciden');
     }
@@ -34,8 +34,29 @@ function Register() {
 
     setLoading(true);
 
-    // Simular registro
+    // Simular retraso de red
     setTimeout(() => {
+      // 1. Obtener lista de usuarios actual o crear una nueva
+      const users = JSON.parse(localStorage.getItem('users') || '[]');
+
+      // 2. Verificar si el email ya está registrado
+      const userExists = users.some(u => u.email === formData.email);
+
+      if (userExists) {
+        setError('Este correo electrónico ya está registrado.');
+        setLoading(false);
+        return;
+      }
+
+      // 3. Añadir nuevo usuario
+      const newUser = {
+        email: formData.email,
+        password: formData.password // Nota: En producción nunca guardar de forma plana
+      };
+      
+      users.push(newUser);
+      localStorage.setItem('users', JSON.stringify(users));
+
       setLoading(false);
       setSuccess(true);
       setFormData({ email: '', password: '', confirmPassword: '' });

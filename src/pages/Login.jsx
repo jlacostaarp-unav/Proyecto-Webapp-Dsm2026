@@ -23,16 +23,31 @@ function Login({ onLogin }) {
     setError('');
     setLoading(true);
 
-    // Simular login con un retraso
+    // Simular retraso de red
     setTimeout(() => {
-      setLoading(false);
-      // Simulación simple: si el email es 'error@test.com' fallara para probar errores
-      if (formData.email === 'error@test.com') {
-        setError('Credenciales incorrectas. Inténtalo de nuevo.');
-      } else {
-        setSuccess(true);
-        onLogin({ email: formData.email });
+      // 1. Obtener lista de usuarios registrados
+      const users = JSON.parse(localStorage.getItem('users') || '[]');
+
+      // 2. Buscar usuario
+      const userFound = users.find(u => u.email === formData.email);
+
+      if (!userFound) {
+        setError('El usuario no existe. Regístrate primero.');
+        setLoading(false);
+        return;
       }
+
+      // 3. Validar contraseña
+      if (userFound.password !== formData.password) {
+        setError('Contraseña incorrecta.');
+        setLoading(false);
+        return;
+      }
+
+      // Si todo va bien
+      setLoading(false);
+      setSuccess(true);
+      onLogin({ email: formData.email });
     }, 1500);
   };
 
