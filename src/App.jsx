@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Routes, Route } from 'react-router';
 import './App.css';
 import Header from './components/ui/Header';
@@ -81,11 +81,47 @@ const PELICULAS_MOCK = [
 
 function App() {
   const [login, setLogin] = useState(false);
+  const [username, setUsername] = useState('');
   const [idToken, setIdToken] = useState('');
   const [peliculas, setPeliculas] = useState(PELICULAS_MOCK);
 
+  // Cargar sesión al iniciar la aplicación
+  useEffect(() => {
+    const savedUsername = localStorage.getItem('username');
+    const savedToken = localStorage.getItem('idToken');
+    
+    if (savedUsername && savedToken) {
+      setLogin(true);
+      setUsername(savedUsername);
+      setIdToken(savedToken);
+    }
+  }, []);
+
+  const handleLogin = (userData) => {
+    const name = userData.email.split('@')[0];
+    const token = 'token-falso-123';
+    
+    setLogin(true);
+    setUsername(name);
+    setIdToken(token);
+    
+    // Guardar en localStorage
+    localStorage.setItem('username', name);
+    localStorage.setItem('idToken', token);
+  };
+
+  const handleLogout = () => {
+    setLogin(false);
+    setUsername('');
+    setIdToken('');
+    
+    // Limpiar localStorage
+    localStorage.removeItem('username');
+    localStorage.removeItem('idToken');
+  };
+
   return (
-    <AuthContext.Provider value={{ login, idToken, language: 'es-ES' }}>
+    <AuthContext.Provider value={{ login, username, idToken, language: 'es-ES', onLogout: handleLogout }}>
       <Header />
       <main className="main-container">
         <Routes>
@@ -93,10 +129,9 @@ function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/legal" element={<LegalNotice />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Login />} />
+          <Route path="/login" element={<Login onLogin={handleLogin} />} />
           <Route path="/movie/:id" element={<MovieDetail peliculas={peliculas} />} />
           
-          {/* Placeholders para futuras implementaciones */}
           <Route path="/favorites" element={<div className="container mt-4"><h2>Mis Favoritos</h2><p>Próximamente...</p></div>} />
           
           <Route path="*" element={<ErrorPage />} />

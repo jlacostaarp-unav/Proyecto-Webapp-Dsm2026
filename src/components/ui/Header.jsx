@@ -4,22 +4,33 @@ import { NavLink, Link } from 'react-router';
 import AuthContext from '../../store/AuthContext';
 
 function Header() {
-  const authCtx = useContext(AuthContext);
+  const { login, username, onLogout } = useContext(AuthContext);
 
   return (
-    <Navbar bg="dark" variant="dark" expand="lg" sticky="top">
+    <Navbar bg="dark" variant="dark" expand="lg" sticky="top" className="shadow-sm py-3 header-custom">
       <Container>
-        <Navbar.Brand as={Link} to="/">🎬 CineApp DSM</Navbar.Brand>
+        <Navbar.Brand as={Link} to="/" className="d-flex align-items-center fw-bold fs-3 text-warning">
+          <span className="me-2">🎬</span> CineApp DSM
+        </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto">
-            <Nav.Link as={NavLink} to="/">Inicio</Nav.Link>
-            <Nav.Link as={NavLink} to="/favorites">Favoritos</Nav.Link>
-            <Nav.Link as={NavLink} to="/contact">Contacto</Nav.Link>
-          </Nav>
-          <Nav>
-            {authCtx.login ? (
-              <Button variant="outline-light">Cerrar Sesión</Button>
+          <Nav className="ms-auto align-items-center">
+            <Nav.Link as={Link} to="/" className="mx-2">Inicio</Nav.Link>
+            <Nav.Link as={Link} to="/contact" className="mx-2">Contacto</Nav.Link>
+            
+            {login ? (
+              <div className="d-flex align-items-center ms-lg-3">
+                <span className="text-light me-3 fw-medium">Hola, <span className="text-warning">{username}</span></span>
+                <Button 
+                  variant="outline-danger" 
+                  size="sm" 
+                  className="rounded-circle shadow-sm p-2 d-flex align-items-center"
+                  onClick={onLogout}
+                  title="Cerrar sesión"
+                >
+                  🚪
+                </Button>
+              </div>
             ) : (
               <>
                 <Nav.Link as={Link} to="/login" className="mx-2">Login</Nav.Link>

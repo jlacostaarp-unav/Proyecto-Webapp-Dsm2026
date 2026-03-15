@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
 import './Login.css';
 
-function Login() {
+function Login({ onLogin }) {
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -26,11 +26,12 @@ function Login() {
     // Simular login con un retraso
     setTimeout(() => {
       setLoading(false);
-      // Simulación simple: si el email es 'admin@test.com' fallara para probar errores
+      // Simulación simple: si el email es 'error@test.com' fallara para probar errores
       if (formData.email === 'error@test.com') {
         setError('Credenciales incorrectas. Inténtalo de nuevo.');
       } else {
         setSuccess(true);
+        onLogin({ email: formData.email });
       }
     }, 1500);
   };
