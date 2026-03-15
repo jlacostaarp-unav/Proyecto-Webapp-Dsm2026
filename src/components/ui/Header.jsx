@@ -1,10 +1,16 @@
 import React, { useContext } from 'react';
 import { Navbar, Nav, Container, Button } from 'react-bootstrap';
-import { NavLink, Link } from 'react-router';
+import { NavLink, Link, useNavigate } from 'react-router';
 import AuthContext from '../../store/AuthContext';
 
 function Header() {
   const { login, username, onLogout } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const handleLogoutClick = () => {
+    onLogout();
+    navigate('/');
+  };
 
   return (
     <Navbar bg="dark" variant="dark" expand="lg" sticky="top" className="shadow-sm py-3 header-custom">
@@ -25,7 +31,7 @@ function Header() {
                   variant="outline-danger" 
                   size="sm" 
                   className="rounded-circle shadow-sm p-2 d-flex align-items-center"
-                  onClick={onLogout}
+                  onClick={handleLogoutClick}
                   title="Cerrar sesión"
                 >
                   🚪
