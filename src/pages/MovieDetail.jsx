@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { useParams, useNavigate } from 'react-router';
-import { Container, Button, Badge, Row, Col } from 'react-bootstrap';
+import { useParams, useNavigate, Link } from 'react-router';
+import { Container, Button, Badge, Row, Col, Alert } from 'react-bootstrap';
 import AuthContext from '../store/AuthContext';
 import './MovieDetail.css';
 
@@ -16,6 +16,7 @@ function MovieDetail({ peliculas }) {
   const [hasVoted, setHasVoted] = useState(false);
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
+  const [hasCommented, setHasCommented] = useState(false);
 
   const loadData = () => {
     // Cargar Ratings
@@ -40,7 +41,16 @@ function MovieDetail({ peliculas }) {
 
     // Cargar Comentarios
     const allComments = JSON.parse(localStorage.getItem('comments') || '{}');
-    setComments(allComments[id] || []);
+    const movieComments = allComments[id] || [];
+    setComments(movieComments);
+
+    // Verificar si el usuario ya ha comentado
+    if (login && username) {
+      const userCommented = movieComments.some(c => c.username === username);
+      setHasCommented(userCommented);
+    } else {
+      setHasCommented(false);
+    }
   };
 
   useEffect(() => {
@@ -64,7 +74,7 @@ function MovieDetail({ peliculas }) {
       navigate('/login');
       return;
     }
-    if (!newComment.trim()) return;
+    if (!newComment.trim() || hasCommented) return;
 
     const allComments = JSON.parse(localStorage.getItem('comments') || '{}');
     if (!allComments[id]) allComments[id] = [];
@@ -195,18 +205,24 @@ function MovieDetail({ peliculas }) {
               <h5 className="mb-3 text-warning">Comentarios ({comments.length})</h5>
               
               {login ? (
-                <form onSubmit={handleCommentSubmit} className="mb-4">
-                  <div className="form-group mb-2">
-                    <textarea 
-                      className="form-control bg-dark text-white border-secondary" 
-                      rows="3" 
-                      placeholder="Escribe tu opinión..."
-                      value={newComment}
-                      onChange={(e) => setNewComment(e.target.value)}
-                    ></textarea>
-                  </div>
-                  <Button type="submit" variant="primary" size="sm" className="px-4">Enviar comentario</Button>
-                </form>
+                !hasCommented ? (
+                  <form onSubmit={handleCommentSubmit} className="mb-4">
+                    <div className="form-group mb-2">
+                      <textarea 
+                        className="form-control bg-dark text-white border-secondary" 
+                        rows="3" 
+                        placeholder="Escribe tu opinión..."
+                        value={newComment}
+                        onChange={(e) => setNewComment(e.target.value)}
+                      ></textarea>
+                    </div>
+                    <Button type="submit" variant="primary" size="sm" className="px-4">Enviar comentario</Button>
+                  </form>
+                ) : (
+                  <Alert variant="info" className="bg-opacity-25 border-info text-info mb-4">
+                    <span className="me-2">ℹ️</span> Ya has dejado un comentario en esta película. ¡Gracias por compartir tu opinión!
+                  </Alert>
+                )
               ) : (
                 <Alert variant="secondary" className="bg-opacity-25 border-secondary text-light">
                   Debes <Link to="/login" className="text-warning">iniciar sesión</Link> para dejar un comentario.
