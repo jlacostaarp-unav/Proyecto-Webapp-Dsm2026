@@ -64,10 +64,15 @@ function MovieDetail({ peliculas }) {
         <div className="hero-overlay">
           <Container className="hero-content">
             <h1 className="movie-hero-title">{movie.titulo}</h1>
-            <div className="movie-hero-meta mb-3">
-              <Badge bg="warning" text="dark" className="me-2">⭐ -</Badge>
+            <div className="movie-hero-meta mb-3 d-flex align-items-center flex-wrap">
+              <div className="stars-container me-3">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <span key={star} className="star-ui text-muted fs-4">☆</span>
+                ))}
+              </div>
+              <span className="text-light me-3 small">(0 valoraciones)</span>
               <Badge bg="info" className="me-2">{movie.categoria}</Badge>
-              <span className="text-light">2024</span>
+              <span className="text-light small">2024</span>
             </div>
             <div className="hero-buttons mb-4">
               <Button variant="light" className="me-2 px-4 py-2 fw-bold">

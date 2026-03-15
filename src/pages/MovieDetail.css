@@ -81,3 +81,17 @@
     align-items: flex-end;
   }
 }
+
+.stars-container {
+  display: inline-flex;
+  gap: 2px;
+}
+
+.star-ui {
+  cursor: default;
+  transition: color 0.2s;
+}
+
+.star-ui.active {
+  color: #ffc107 !important;
+}
