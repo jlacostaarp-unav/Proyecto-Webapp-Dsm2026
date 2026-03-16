@@ -65,8 +65,15 @@ function MovieDetail({ peliculas }) {
       }
 
       loadData();
+      // Hacer scroll hacia arriba al cambiar de película
+      window.scrollTo(0, 0);
     }
   }, [id, peliculas, login, username]);
+
+  // Películas recomendadas (misma categoría, excluyendo la actual)
+  const recomendaciones = peliculas
+    .filter(p => p.categoria === movie?.categoria && p.id !== movie?.id)
+    .slice(0, 4);
 
   const handleCommentSubmit = (e) => {
     e.preventDefault();
@@ -266,6 +273,32 @@ function MovieDetail({ peliculas }) {
           </Col>
         </Row>
       </Container>
+
+      {/* Sección de Recomendaciones */}
+      {recomendaciones.length > 0 && (
+        <div className="recommendations-section bg-light border-top py-5">
+          <Container>
+            <h3 className="mb-4 fw-bold text-dark">También te puede interesar...</h3>
+            <Row xs={1} md={2} lg={4} className="g-4">
+              {recomendaciones.map((p) => (
+                <Col key={p.id}>
+                  <Link to={`/movie/${p.id}`} className="text-decoration-none">
+                    <div className="recommendation-card h-100 shadow-sm rounded-3 overflow-hidden">
+                      <div className="recommendation-img-wrapper">
+                        <img src={p.imagen} alt={p.titulo} className="w-100 h-100 object-fit-cover" />
+                      </div>
+                      <div className="p-3 bg-white">
+                        <h6 className="mb-1 text-dark text-truncate">{p.titulo}</h6>
+                        <Badge bg="info" className="small">{p.categoria}</Badge>
+                      </div>
+                    </div>
+                  </Link>
+                </Col>
+              ))}
+            </Row>
+          </Container>
+        </div>
+      )}
     </div>
   );
 }
