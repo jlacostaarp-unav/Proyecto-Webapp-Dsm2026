@@ -4,7 +4,7 @@ Este documento describe la arquitectura, los componentes y las características 
 
 ---
 
-## 🚀 Arquitectura y Características de React
+## Arquitectura y Características de React
 
 El proyecto utiliza una arquitectura basada en componentes funcionales, aprovechando las capacidades modernas de React para gestionar el estado y los efectos secundarios.
 
@@ -35,7 +35,7 @@ Dado que el proyecto se encuentra en fase previa a Firebase, se ha implementado 
 
 ---
 
-## 🧩 Descripción de Componentes
+## Descripción de Componentes
 
 ### Componentes de Interfaz (UI)
 - **`Header.jsx`**: Cabecera dinámica. Cambia los enlaces mostrados según si el usuario está autenticado. Incluye el acceso a favoritos y el botón de logout.
@@ -60,7 +60,7 @@ Dado que el proyecto se encuentra en fase previa a Firebase, se ha implementado 
 
 ---
 
-## 🛠️ Tecnologías Utilizadas
+## Tecnologías Utilizadas
 - **React**: Biblioteca principal para la interfaz.
 - **React Bootstrap**: Framework de CSS para componentes responsive y diseño premium.
 - **JavaScript (ES6+)**: Lógica de filtrado, mapeo de datos y gestión de promesas simuladas.
