@@ -84,45 +84,49 @@ function App() {
   const [login, setLogin] = useState(false);
   const [username, setUsername] = useState('');
   const [idToken, setIdToken] = useState('');
+  const [userId, setUserId] = useState('');
   const [peliculas, setPeliculas] = useState(PELICULAS_MOCK);
 
   // Cargar sesión al iniciar la aplicación
   useEffect(() => {
-    const savedUsername = localStorage.getItem('username');
+    const savedEmail = localStorage.getItem('email');
     const savedToken = localStorage.getItem('idToken');
+    const savedUserId = localStorage.getItem('userId');
     
-    if (savedUsername && savedToken) {
+    if (savedEmail && savedToken) {
       setLogin(true);
-      setUsername(savedUsername);
+      setUsername(savedEmail.split('@')[0]);
       setIdToken(savedToken);
+      setUserId(savedUserId);
     }
   }, []);
 
   const handleLogin = (userData) => {
-    const name = userData.email.split('@')[0];
-    const token = 'token-falso-123';
-    
     setLogin(true);
-    setUsername(name);
-    setIdToken(token);
+    setUsername(userData.email.split('@')[0]);
+    setIdToken(userData.idToken);
+    setUserId(userData.localId);
     
     // Guardar en localStorage
-    localStorage.setItem('username', name);
-    localStorage.setItem('idToken', token);
+    localStorage.setItem('email', userData.email);
+    localStorage.setItem('idToken', userData.idToken);
+    localStorage.setItem('userId', userData.localId);
   };
 
   const handleLogout = () => {
     setLogin(false);
     setUsername('');
     setIdToken('');
+    setUserId('');
     
     // Limpiar localStorage
-    localStorage.removeItem('username');
+    localStorage.removeItem('email');
     localStorage.removeItem('idToken');
+    localStorage.removeItem('userId');
   };
 
   return (
-    <AuthContext.Provider value={{ login, username, idToken, language: 'es-ES', onLogout: handleLogout }}>
+    <AuthContext.Provider value={{ login, username, idToken, userId, language: 'es-ES', onLogout: handleLogout }}>
       <Header />
       <main className="main-container">
         <Routes>

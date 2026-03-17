@@ -35,33 +35,32 @@ function Register() {
 
     setLoading(true);
 
-    // Simular retraso de red
-    setTimeout(() => {
-      // 1. Obtener lista de usuarios actual o crear una nueva
-      const users = JSON.parse(localStorage.getItem('users') || '[]');
+    const authData = {
+      email: formData.email,
+      password: formData.password,
+      returnSecureToken: true
+    };
 
-      // 2. Verificar si el email ya está registrado
-      const userExists = users.some(u => u.email === formData.email);
-
-      if (userExists) {
-        setError('Este correo electrónico ya está registrado.');
-        setLoading(false);
-        return;
-      }
-
-      // 3. Añadir nuevo usuario
-      const newUser = {
-        email: formData.email,
-        password: formData.password // Nota: En producción nunca guardar de forma plana
-      };
-      
-      users.push(newUser);
-      localStorage.setItem('users', JSON.stringify(users));
-
-      setLoading(false);
-      setSuccess(true);
-      setFormData({ email: '', password: '', confirmPassword: '' });
-    }, 1500);
+    import('axios').then(({ default: axios }) => {
+      axios.post('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyD8kkAhoaw6KGCfiR-PxyBrIFOfTEAraxo', authData)
+        .then((response) => {
+          setLoading(false);
+          setSuccess(true);
+          setFormData({ email: '', password: '', confirmPassword: '' });
+          // Opcional: Podríamos iniciar sesión automáticamente aquí si quisiéramos, 
+          // pero el flujo actual redirige al login.
+        })
+        .catch((error) => {
+          setLoading(false);
+          const errorCode = error.response?.data?.error?.message;
+          if (errorCode === 'EMAIL_EXISTS') {
+            setError('Este correo electrónico ya está registrado.');
+          } else {
+            setError('Se ha producido un error al registrar la cuenta.');
+          }
+          console.error('Error de registro:', error);
+        });
+    });
   };
 
   if (success) {

@@ -23,32 +23,37 @@ function Login({ onLogin }) {
     setError('');
     setLoading(true);
 
-    // Simular retraso de red
-    setTimeout(() => {
-      // 1. Obtener lista de usuarios registrados
-      const users = JSON.parse(localStorage.getItem('users') || '[]');
+    const authData = {
+      email: formData.email,
+      password: formData.password,
+      returnSecureToken: true
+    };
 
-      // 2. Buscar usuario
-      const userFound = users.find(u => u.email === formData.email);
-
-      if (!userFound) {
-        setError('El usuario no existe. Regístrate primero.');
-        setLoading(false);
-        return;
-      }
-
-      // 3. Validar contraseña
-      if (userFound.password !== formData.password) {
-        setError('Contraseña incorrecta.');
-        setLoading(false);
-        return;
-      }
-
-      // Si todo va bien
-      setLoading(false);
-      setSuccess(true);
-      onLogin({ email: formData.email });
-    }, 1500);
+    import('axios').then(({ default: axios }) => {
+      axios.post('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyD8kkAhoaw6KGCfiR-PxyBrIFOfTEAraxo', authData)
+        .then((response) => {
+          setLoading(false);
+          setSuccess(true);
+          // Pasamos el email y el idToken recibido de Firebase
+          onLogin({ 
+            email: response.data.email, 
+            idToken: response.data.idToken,
+            localId: response.data.localId 
+          });
+        })
+        .catch((error) => {
+          setLoading(false);
+          const errorCode = error.response?.data?.error?.message;
+          if (errorCode === 'EMAIL_NOT_FOUND' || errorCode === 'INVALID_PASSWORD') {
+            setError('Credenciales incorrectas. Revisa tu email y contraseña.');
+          } else if (errorCode === 'USER_DISABLED') {
+            setError('Esta cuenta ha sido deshabilitada.');
+          } else {
+            setError('Se ha producido un error al iniciar sesión.');
+          }
+          console.error('Error de login:', error);
+        });
+    });
   };
 
   if (success) {

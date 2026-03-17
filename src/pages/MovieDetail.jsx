@@ -7,7 +7,7 @@ import './MovieDetail.css';
 function MovieDetail({ peliculas }) {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { login, username } = useContext(AuthContext);
+  const { login, username, idToken, userId } = useContext(AuthContext);
   const [movie, setMovie] = useState(null);
   const [isFavorite, setIsFavorite] = useState(false);
   const [averageRating, setAverageRating] = useState(0);
@@ -19,38 +19,46 @@ function MovieDetail({ peliculas }) {
   const [hasCommented, setHasCommented] = useState(false);
 
   const loadData = () => {
-    // Cargar Ratings
-    const allRatings = JSON.parse(localStorage.getItem('ratings') || '{}');
-    const movieRatings = allRatings[id] || {};
-    const values = Object.values(movieRatings);
-    
-    if (login && username && movieRatings[username]) {
-      setHasVoted(true);
-    } else {
-      setHasVoted(false);
-    }
-    
-    if (values.length > 0) {
-      const sum = values.reduce((a, b) => a + b, 0);
-      setAverageRating(sum / values.length);
-      setTotalRatings(values.length);
-    } else {
-      setAverageRating(0);
-      setTotalRatings(0);
-    }
+    import('axios').then(({ default: axios }) => {
+      // Cargar Ratings
+      axios.get(`https://webapp-react-dsm2026-default-rtdb.europe-west1.firebasedatabase.app/ratings/${id}.json`)
+        .then(response => {
+          const movieRatings = response.data || {};
+          const values = Object.values(movieRatings);
+          
+          if (login && userId && movieRatings[userId]) {
+            setHasVoted(true);
+          } else {
+            setHasVoted(false);
+          }
+          
+          if (values.length > 0) {
+            const sum = values.reduce((a, b) => a + b, 0);
+            setAverageRating(sum / values.length);
+            setTotalRatings(values.length);
+          } else {
+            setAverageRating(0);
+            setTotalRatings(0);
+          }
+        })
+        .catch(error => console.error('Error al cargar ratings:', error));
 
-    // Cargar Comentarios
-    const allComments = JSON.parse(localStorage.getItem('comments') || '{}');
-    const movieComments = allComments[id] || [];
-    setComments(movieComments);
+      // Cargar Comentarios
+      axios.get(`https://webapp-react-dsm2026-default-rtdb.europe-west1.firebasedatabase.app/comments/${id}.json`)
+        .then(response => {
+          const movieComments = response.data ? Object.values(response.data) : [];
+          setComments(movieComments);
 
-    // Verificar si el usuario ya ha comentado
-    if (login && username) {
-      const userCommented = movieComments.some(c => c.username === username);
-      setHasCommented(userCommented);
-    } else {
-      setHasCommented(false);
-    }
+          // Verificar si el usuario ya ha comentado
+          if (login && username) {
+            const userCommented = movieComments.some(c => c.username === username);
+            setHasCommented(userCommented);
+          } else {
+            setHasCommented(false);
+          }
+        })
+        .catch(error => console.error('Error al cargar comentarios:', error));
+    });
   };
 
   useEffect(() => {
@@ -58,17 +66,22 @@ function MovieDetail({ peliculas }) {
     if (foundMovie) {
       setMovie(foundMovie);
       
-      // Comprobar si ya es favorita si hay sesión
-      if (login && username) {
-        const favorites = JSON.parse(localStorage.getItem(`favorites_${username}`) || '[]');
-        setIsFavorite(favorites.includes(id));
+      // Comprobar si ya es favorita si hay sesión (vía Firebase)
+      if (login && userId) {
+        import('axios').then(({ default: axios }) => {
+          axios.get(`https://webapp-react-dsm2026-default-rtdb.europe-west1.firebasedatabase.app/favorites/${userId}/${id}.json?auth=${idToken}`)
+            .then(response => {
+              setIsFavorite(!!response.data);
+            })
+            .catch(error => console.error('Error al cargar favoritos:', error));
+        });
       }
 
       loadData();
       // Hacer scroll hacia arriba al cambiar de película
       window.scrollTo(0, 0);
     }
-  }, [id, peliculas, login, username]);
+  }, [id, peliculas, login, userId, idToken]);
 
   // Películas recomendadas (misma categoría, excluyendo la actual)
   const recomendaciones = peliculas
@@ -107,13 +120,13 @@ function MovieDetail({ peliculas }) {
 
     if (hasVoted) return;
 
-    const allRatings = JSON.parse(localStorage.getItem('ratings') || '{}');
-    if (!allRatings[id]) allRatings[id] = {};
-    
-    allRatings[id][username] = rating;
-    localStorage.setItem('ratings', JSON.stringify(allRatings));
-    
-    loadData();
+    import('axios').then(({ default: axios }) => {
+      axios.put(`https://webapp-react-dsm2026-default-rtdb.europe-west1.firebasedatabase.app/ratings/${id}/${userId}.json?auth=${idToken}`, rating)
+        .then(() => {
+          loadData();
+        })
+        .catch(error => console.error('Error al votar:', error));
+    });
   };
 
   const toggleFavorite = () => {
@@ -122,19 +135,21 @@ function MovieDetail({ peliculas }) {
       return;
     }
 
-    const storageKey = `favorites_${username}`;
-    let favorites = JSON.parse(localStorage.getItem(storageKey) || '[]');
+    const url = `https://webapp-react-dsm2026-default-rtdb.europe-west1.firebasedatabase.app/favorites/${userId}/${id}.json?auth=${idToken}`;
 
-    if (isFavorite) {
-      // Quitar de favoritos
-      favorites = favorites.filter(favId => favId !== id);
-    } else {
-      // Añadir a favoritos
-      favorites.push(id);
-    }
-
-    localStorage.setItem(storageKey, JSON.stringify(favorites));
-    setIsFavorite(!isFavorite);
+    import('axios').then(({ default: axios }) => {
+      if (isFavorite) {
+        // Quitar de favoritos
+        axios.delete(url)
+          .then(() => setIsFavorite(false))
+          .catch(error => console.error('Error al quitar favorito:', error));
+      } else {
+        // Añadir a favoritos (usamos true para indicar que existe)
+        axios.put(url, true)
+          .then(() => setIsFavorite(true))
+          .catch(error => console.error('Error al añadir favorito:', error));
+      }
+    });
   };
 
   if (!movie) {

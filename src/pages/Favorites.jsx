@@ -5,7 +5,7 @@ import AuthContext from '../store/AuthContext';
 import Peliculas from '../components/Peliculas/Peliculas';
 
 function Favorites({ peliculas }) {
-  const { login, username } = useContext(AuthContext);
+  const { login, username, idToken, userId } = useContext(AuthContext);
   const [favoritePeliculas, setFavoritePeliculas] = useState([]);
   const navigate = useNavigate();
 
@@ -15,12 +15,16 @@ function Favorites({ peliculas }) {
       return;
     }
 
-    const storageKey = `favorites_${username}`;
-    const favoriteIds = JSON.parse(localStorage.getItem(storageKey) || '[]');
-    
-    const filtered = peliculas.filter(p => favoriteIds.includes(p.id));
-    setFavoritePeliculas(filtered);
-  }, [login, username, peliculas, navigate]);
+    import('axios').then(({ default: axios }) => {
+      axios.get(`https://webapp-react-dsm2026-default-rtdb.europe-west1.firebasedatabase.app/favorites/${userId}.json?auth=${idToken}`)
+        .then(response => {
+          const favoriteIds = response.data ? Object.keys(response.data) : [];
+          const filtered = peliculas.filter(p => favoriteIds.includes(p.id));
+          setFavoritePeliculas(filtered);
+        })
+        .catch(error => console.error('Error al cargar favoritos de Firebase:', error));
+    });
+  }, [login, userId, idToken, peliculas, navigate]);
 
   if (!login) return null;
 
