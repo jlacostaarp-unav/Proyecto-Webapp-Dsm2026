@@ -19,6 +19,8 @@ const PELICULAS_MOCK = [
     titulo: 'El Caballero Oscuro',
     categoria: 'Acción',
     nota: 4.8,
+    año: 2008,
+    duracion: '2h 32m',
     descripcion: 'Con la ayuda del teniente Jim Gordon y del nuevo y comprometido Fiscal del Distrito, Harvey Dent, Batman se propone destruir para siempre el crimen organizado en Gotham City.',
     imagen: 'https://m.media-amazon.com/images/M/MV5BMTMxNTMwODM0NF5BMl5BanBnXkFtZTcwODAyMTk2Mw@@._V1_.jpg'
   },
@@ -27,6 +29,8 @@ const PELICULAS_MOCK = [
     titulo: 'Inception',
     categoria: 'Ciencia Ficción',
     nota: 4.7,
+    año: 2010,
+    duracion: '2h 28m',
     descripcion: 'Dom Cobb es un ladrón hábil, el mejor de todos en el peligroso arte de la extracción: robar valiosos secretos de lo profundo del subconsciente durante el estado de sueño.',
     imagen: 'https://image.tmdb.org/t/p/w500/9gk7adHYeDvHkCSEqAvQNLV5Uge.jpg'
   },
@@ -35,6 +39,8 @@ const PELICULAS_MOCK = [
     titulo: 'Cadena Perpetua',
     categoria: 'Drama',
     nota: 4.9,
+    año: 1994,
+    duracion: '2h 22m',
     descripcion: 'Acusado del asesinato de su mujer, el banquero de éxito Andy Dufresne es condenado a cadena perpetua en la prisión de Shawshank.',
     imagen: 'https://upload.wikimedia.org/wikipedia/en/8/81/ShawshankRedemptionMoviePoster.jpg'
   },
@@ -43,6 +49,8 @@ const PELICULAS_MOCK = [
     titulo: 'Interstellar',
     categoria: 'Ciencia Ficción',
     nota: 4.6,
+    año: 2014,
+    duracion: '2h 49m',
     descripcion: 'Al ver que la vida en la Tierra está llegando a su fin, un grupo de exploradores liderados por el piloto Cooper y la científica Amelia emprenden una misión que puede ser la más importante de la historia de la humanidad.',
     imagen: 'https://m.media-amazon.com/images/M/MV5BZjdkOTU3MDktN2IxOS00OGEyLWFmMjktY2FiMmZkNWIyODZiXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_.jpg'
   },
@@ -51,6 +59,8 @@ const PELICULAS_MOCK = [
     titulo: 'Dune: Parte Dos',
     categoria: 'Ciencia Ficción',
     nota: 4.5,
+    año: 2024,
+    duracion: '2h 46m',
     descripcion: 'Paul Atreides se une a Chani y a los Fremen mientras planea la venganza contra los conspiradores que destruyeron a su familia.',
     imagen: 'https://m.media-amazon.com/images/M/MV5BNThiOTM4NTAtMDczNy00YzlkLWJhNTEtZTZhNDVmYzlkZWI0XkEyXkFqcGdeQXVyMTEyMjM2NDc2._V1_.jpg'
   },
@@ -59,6 +69,8 @@ const PELICULAS_MOCK = [
     titulo: 'Parásitos',
     categoria: 'Suspense',
     nota: 4.8,
+    año: 2019,
+    duracion: '2h 12m',
     descripcion: 'Toda la familia de Ki-taek está en el paro. Su hijo mayor, Ki-woo, empieza a dar clases particulares en casa de Park, un empresario adinerado.',
     imagen: 'https://m.media-amazon.com/images/M/MV5BYWZjMjk3ZTItODQ2ZC00NTY5LWE0ZDYtZTI3MjcwN2Q5NTVkXkEyXkFqcGdeQXVyODk4OTc3MTY@._V1_.jpg'
   },
@@ -67,6 +79,8 @@ const PELICULAS_MOCK = [
     titulo: 'Gladiator',
     categoria: 'Acción',
     nota: 4.7,
+    año: 2000,
+    duracion: '2h 35m',
     descripcion: 'En el año 180, el Imperio Romano domina todo el mundo conocido. Tras una gran victoria, el anciano emperador Marco Aurelio decide transferir el poder a Máximo, bravo general de sus ejércitos.',
     imagen: 'https://m.media-amazon.com/images/I/91sdz07c9FL._AC_UF1000,1000_QL80_.jpg'
   },
@@ -75,6 +89,8 @@ const PELICULAS_MOCK = [
     titulo: 'Del Revés 2 (Inside Out 2)',
     categoria: 'Animación',
     nota: 4.4,
+    año: 2024,
+    duracion: '1h 40m',
     descripcion: 'Las voces de la Central se ven sorprendidas ante la llegada de Riley al campamento de hockey. Alegría, Tristeza, Ira, Miedo y Asco llevan mucho tiempo al mando, pero no saben cómo reaccionar cuando aparecen nuevas emociones.',
     imagen: 'https://upload.wikimedia.org/wikipedia/en/f/f7/Inside_Out_2_poster.jpg'
   }

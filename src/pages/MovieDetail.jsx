@@ -275,8 +275,8 @@ function MovieDetail({ peliculas }) {
               <ul className="list-unstyled text-secondary">
                 <li className="mb-2"><strong>Género:</strong> {movie.categoria}</li>
                 <li className="mb-2"><strong>Calificación:</strong> ⭐ {averageRating > 0 ? averageRating.toFixed(1) : '-'}</li>
-                <li className="mb-2"><strong>Año:</strong> 2024</li>
-                <li className="mb-2"><strong>Duración:</strong> 2h 15m (Aprox)</li>
+                <li className="mb-2"><strong>Año:</strong> {movie.año}</li>
+                <li className="mb-2"><strong>Duración:</strong> {movie.duracion}</li>
               </ul>
               <Button 
                 variant="outline-secondary" 
