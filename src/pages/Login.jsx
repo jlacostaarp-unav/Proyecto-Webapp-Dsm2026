@@ -44,12 +44,14 @@ function Login({ onLogin }) {
         .catch((error) => {
           setLoading(false);
           const errorCode = error.response?.data?.error?.message;
-          if (errorCode === 'EMAIL_NOT_FOUND' || errorCode === 'INVALID_PASSWORD') {
-            setError('Credenciales incorrectas. Revisa tu email y contraseña.');
+          if (errorCode === 'EMAIL_NOT_FOUND' || errorCode === 'INVALID_PASSWORD' || errorCode === 'INVALID_LOGIN_CREDENTIALS') {
+            setError('Usuario o contraseñas incorrectas...');
           } else if (errorCode === 'USER_DISABLED') {
             setError('Esta cuenta ha sido deshabilitada.');
+          } else if (errorCode === 'TOO_MANY_ATTEMPTS_TRY_LATER') {
+            setError('Demasiados intentos. Inténtalo más tarde.');
           } else {
-            setError('Se ha producido un error al iniciar sesión.');
+            setError('Error al iniciar sesión. Revisa los datos.');
           }
           console.error('Error de login:', error);
         });

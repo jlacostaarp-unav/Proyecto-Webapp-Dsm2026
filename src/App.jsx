@@ -81,25 +81,14 @@ const PELICULAS_MOCK = [
 ];
 
 function App() {
-  const [login, setLogin] = useState(false);
-  const [username, setUsername] = useState('');
-  const [idToken, setIdToken] = useState('');
-  const [userId, setUserId] = useState('');
+  const [login, setLogin] = useState(() => !!localStorage.getItem('idToken'));
+  const [username, setUsername] = useState(() => {
+    const email = localStorage.getItem('email');
+    return email ? email.split('@')[0] : '';
+  });
+  const [idToken, setIdToken] = useState(() => localStorage.getItem('idToken') || '');
+  const [userId, setUserId] = useState(() => localStorage.getItem('userId') || '');
   const [peliculas, setPeliculas] = useState(PELICULAS_MOCK);
-
-  // Cargar sesión al iniciar la aplicación
-  useEffect(() => {
-    const savedEmail = localStorage.getItem('email');
-    const savedToken = localStorage.getItem('idToken');
-    const savedUserId = localStorage.getItem('userId');
-    
-    if (savedEmail && savedToken) {
-      setLogin(true);
-      setUsername(savedEmail.split('@')[0]);
-      setIdToken(savedToken);
-      setUserId(savedUserId);
-    }
-  }, []);
 
   const handleLogin = (userData) => {
     setLogin(true);
