@@ -18,8 +18,13 @@ function Favorites({ peliculas }) {
     import('axios').then(({ default: axios }) => {
       axios.get(`https://webapp-react-dsm2026-default-rtdb.europe-west1.firebasedatabase.app/favorites/${userId}.json?auth=${idToken}`)
         .then(response => {
-          const favoriteIds = response.data ? Object.keys(response.data) : [];
-          const filtered = peliculas.filter(p => favoriteIds.includes(p.id));
+          const data = response.data || {};
+          // Extraemos IDs solo de entradas que sean explícitamente true
+          const favoriteIds = Object.entries(data)
+            .filter(([key, val]) => val === true)
+            .map(([key, val]) => key.toString());
+          
+          const filtered = peliculas.filter(p => favoriteIds.includes(p.id.toString()));
           setFavoritePeliculas(filtered);
         })
         .catch(error => console.error('Error al cargar favoritos de Firebase:', error));

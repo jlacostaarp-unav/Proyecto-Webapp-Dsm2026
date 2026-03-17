@@ -14,24 +14,24 @@ Se ha implementado **`AuthContext`** para gestionar el estado de autenticación 
 ### 2. Hooks de React
 - **`useState`**: Utilizado para gestionar estados locales como el texto de búsqueda, filtros de categorías, datos de películas, y el manejo de formularios.
 - **`useEffect`**: Fundamental para:
-    - Persistencia de sesión al recargar la página.
-    - Sincronización de datos con `localStorage` (comentarios, ratings, favoritos).
+    - Persistencia de sesión mediante recuperación de tokens.
+    - Sincronización de datos con **Firebase Realtime Database**.
     - Ejecución de lógica de scroll y filtrado en tiempo real.
-- **`useContext`**: Permite consumir el contexto global de usuario de forma sencilla.
+- **`useContext`**: Permite consumir el contexto global de usuario (`AuthContext`) que ahora incluye el `idToken` y el `userId` de Firebase.
 - **`useParams`**: Utilizado en `MovieDetail` para extraer el ID de la película directamente desde la URL.
-- **`useNavigate`**: Empleado para redirecciones programáticas (ej. enviar al usuario al login tras registrarse o intentar votar sin sesión).
+- **`useNavigate`**: Empleado para redirecciones programáticas.
 
 ### 3. Enrutamiento (React Router v7)
 Se utiliza un sistema de rutas dinámico para separar las vistas de la aplicación:
 - Rutas públicas: Home, Registro, Login.
 - Rutas dinámicas: Detalle de película (`/movie/:id`).
-- Rutas protegidas (por lógica): Favoritos.
+- Rutas protegidas: Favoritos (requiere autenticación activa).
 
-### 4. Persistencia de Datos
-Dado que el proyecto se encuentra en fase previa a Firebase, se ha implementado un sistema robusto de persistencia basado en **`localStorage`**, simulando una base de datos real para:
-- Usuarios registrados y credenciales.
-- Listado de favoritos por usuario.
-- Sistema de valoraciones (ratings) y comentarios.
+### 4. Persistencia de Datos (Google Firebase)
+Se ha migrado toda la persistencia local a una arquitectura en la nube utilizando la **API REST de Firebase** mediante **Axios**:
+- **Firebase Authentication**: Gestión real de usuarios (Identity Toolkit).
+- **Firebase Realtime Database**: Almacenamiento distribuido de favoritos, valoraciones (ratings) y comentarios.
+- **Seguridad**: Validación de peticiones mediante `idToken`.
 
 ---
 

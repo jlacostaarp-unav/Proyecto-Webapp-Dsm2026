@@ -7,19 +7,29 @@ function Pelicula({ id, titulo, imagen, descripcion, categoria, nota }) {
   const [commentCount, setCommentCount] = useState(0);
 
   useEffect(() => {
-    // Nota media
-    const allRatings = JSON.parse(localStorage.getItem('ratings') || '{}');
-    const movieRatings = allRatings[id] || {};
-    const values = Object.values(movieRatings);
-    
-    if (values.length > 0) {
-      const sum = values.reduce((a, b) => a + b, 0);
-      setAverageRating(sum / values.length);
-    }
+    import('axios').then(({ default: axios }) => {
+      // Nota media desde Firebase
+      axios.get(`https://webapp-react-dsm2026-default-rtdb.europe-west1.firebasedatabase.app/ratings/${id}.json`)
+        .then(response => {
+          const movieRatings = response.data || {};
+          const values = Object.values(movieRatings).filter(v => typeof v === 'number');
+          if (values.length > 0) {
+            const sum = values.reduce((a, b) => a + b, 0);
+            setAverageRating(sum / values.length);
+          } else {
+            setAverageRating(0);
+          }
+        })
+        .catch(err => console.error(err));
 
-    // Contador comentarios
-    const allComments = JSON.parse(localStorage.getItem('comments') || '{}');
-    setCommentCount((allComments[id] || []).length);
+      // Contador comentarios desde Firebase
+      axios.get(`https://webapp-react-dsm2026-default-rtdb.europe-west1.firebasedatabase.app/comments/${id}.json`)
+        .then(response => {
+          const movieComments = response.data ? Object.values(response.data) : [];
+          setCommentCount(movieComments.length);
+        })
+        .catch(err => console.error(err));
+    });
   }, [id]);
 
   return (

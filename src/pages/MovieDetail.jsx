@@ -24,7 +24,8 @@ function MovieDetail({ peliculas }) {
       axios.get(`https://webapp-react-dsm2026-default-rtdb.europe-west1.firebasedatabase.app/ratings/${id}.json`)
         .then(response => {
           const movieRatings = response.data || {};
-          const values = Object.values(movieRatings);
+          // Filtramos solo los valores numéricos válidos (evitando los null de los arrays de Firebase)
+          const values = Object.values(movieRatings).filter(v => typeof v === 'number');
           
           if (login && userId && movieRatings[userId]) {
             setHasVoted(true);
@@ -96,20 +97,20 @@ function MovieDetail({ peliculas }) {
     }
     if (!newComment.trim() || hasCommented) return;
 
-    const allComments = JSON.parse(localStorage.getItem('comments') || '{}');
-    if (!allComments[id]) allComments[id] = [];
-
     const commentObj = {
       username,
       text: newComment,
       date: new Date().toLocaleDateString()
     };
 
-    allComments[id].push(commentObj);
-    localStorage.setItem('comments', JSON.stringify(allComments));
-    
-    setComments(allComments[id]);
-    setNewComment("");
+    import('axios').then(({ default: axios }) => {
+      axios.post(`https://webapp-react-dsm2026-default-rtdb.europe-west1.firebasedatabase.app/comments/${id}.json?auth=${idToken}`, commentObj)
+        .then(() => {
+          setNewComment("");
+          loadData();
+        })
+        .catch(error => console.error('Error al enviar comentario:', error));
+    });
   };
 
   const handleVote = (rating) => {
@@ -144,7 +145,7 @@ function MovieDetail({ peliculas }) {
           .then(() => setIsFavorite(false))
           .catch(error => console.error('Error al quitar favorito:', error));
       } else {
-        // Añadir a favoritos (usamos true para indicar que existe)
+        // Añadir a favoritos
         axios.put(url, true)
           .then(() => setIsFavorite(true))
           .catch(error => console.error('Error al añadir favorito:', error));
